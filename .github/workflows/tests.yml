@@ -67,6 +67,10 @@ jobs:
       # Install markitdown from the local checkout rather than PyPI, so the
       # plugin is tested against the sibling package it ships alongside.
       - name: Install packages
+        # PyMuPDF 2.0 has no Windows ARM wheel. Its bundled MuPDF VS2019
+        # projects need the documented upgrade path on the VS2026 ARM runner.
+        env:
+          PYMUPDF_SETUP_MUPDF_VS_UPGRADE: ${{ matrix.os == 'windows-11-vs2026-arm' && '1' || '0' }}
         run: pip install ./packages/markitdown ./packages/markitdown-ocr pytest
 
       - name: Run tests
