@@ -1,0 +1,4 @@
+DEMO ONLY - fictional invoice for software testing
+Invoice: DEMO-001
+Date: 2026-01-01
+Total: USD 42.50
