@@ -9,3 +9,7 @@ Extension: 11 API/field tests pass on Python 3.12.14, including real subprocess 
 A Starlette TestClient warning recommends future migration from httpx to httpx2. Tests currently pass; this deprecation is not hidden.
 
 Not verified: Docker build/runtime (no local Docker daemon), PDF/XLSX/HTML/CSV/JSON API fixture coverage, adversarial parser isolation, worker exhaustion/production load, OCR, model extraction, external hosting, and the full original Microsoft test matrix. No real document, API key, production database or customer information was used.
+
+## Inspected CI results
+
+Document API run 39254167313 and pre-commit run 39254167304 passed. The full inherited matrix run 39254167449 completed with 20 passing jobs and one failure: ocr-tests (windows-11-vs2026-arm, 3.12) failed while building/installing PyMuPDF, before tests began (metadata-generation-failed; mupdfwrap.py Visual Studio build exited 1). The full matrix is therefore not green. Linux OCR, Windows x64 OCR, core and MCP jobs passed. Do not represent Windows ARM OCR as supported by this verification.
