@@ -26,3 +26,7 @@ References: https://github.com/pymupdf/PyMuPDF/blob/main/setup.py ; https://gith
 ## Confirmed toolchain fix
 
 Commit 12623e27acf6de0ab51fb3f3939f99d9babb84f2 was checked in Actions run https://github.com/hamed665/ai-document-intelligence/actions/runs/39329691729: **all 21 jobs passed**, including Windows ARM OCR installation and tests. Document API run 39329691735 and pre-commit run 39329691727 also passed. This supersedes the earlier Windows ARM build blocker. No tests were removed or dependency downgraded. These CI results cover the inherited matrix; the REST API's own automated fixtures remain TXT and DOCX, and do not establish production isolation, load behavior or optional cloud-model correctness.
+
+## Container verification follow-up
+
+A real Docker build/runtime job was added after the native matrix passed. Its first run (39333031601) exposed an inherited `.dockerignore` allowlist that excluded the new service and root license from the build context. `Dockerfile.api.dockerignore` now supplies an API-specific allowlist while preserving the original converter image configuration. The CI runtime probe checks UID 10001, read-only /app, unauthenticated rejection, real synthetic TXT extraction and explicit partial batch status under `--network none`, dropped capabilities and no-new-privileges. The corrected container run is pending; an authored Dockerfile is not counted as an executed container.
