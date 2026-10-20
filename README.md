@@ -54,7 +54,7 @@ curl -H "Authorization: Bearer $DOCUMENT_API_TOKEN" -F file=@examples/invoice.tx
 curl -H "Authorization: Bearer $DOCUMENT_API_TOKEN" -F files=@examples/invoice.txt -F files=@examples/invoice.txt http://127.0.0.1:8000/v1/batch
 ```
 
-Optional container command: `docker compose -f compose.api.yml up --build`. It binds localhost, uses an internal Docker network, a non-root user, read-only root filesystem, temporary storage and container resource limits. Docker is unavailable in the development environment, so this configuration is not claimed as runtime-verified.
+Optional container command: `docker compose -f compose.api.yml up --build`. It binds localhost, uses an internal Docker network, a non-root user, read-only root filesystem, temporary storage and container resource limits. A GitHub runner built `Dockerfile.api` and executed auth, real synthetic TXT extraction and partial-batch checks under UID 10001, a read-only root, temporary /tmp, dropped capabilities and `--network none` (run 39346640822). The exact Compose networking/resource configuration has not been exercised as a whole; this smoke is not a production sandbox or load assessment.
 
 ## Security
 
@@ -73,7 +73,7 @@ uvx black==23.7.0 --check service tests-service
 uv run pip-audit --path .venv/lib/python3.12/site-packages
 ```
 
-Eleven tests cover real conversion, structured fields, missing/ambiguous values, malformed amounts, authentication, disabled configuration, unsupported/empty/oversized files, batch bounds and mixed results. The original Microsoft test suites remain separate; they are not represented as having passed locally. See [verification](docs/VERIFICATION.md).
+Eleven tests cover real conversion, structured fields, missing/ambiguous values, malformed amounts, authentication, disabled configuration, unsupported/empty/oversized files, batch bounds and mixed results. The original Microsoft test suites remain separate; they are not represented as having passed locally. The inherited core/OCR/MCP matrix also passed all 21 jobs after the documented Windows ARM toolchain correction. See [verification](docs/VERIFICATION.md) for source commit/run evidence and remaining limits.
 
 ## Demo
 

@@ -30,3 +30,9 @@ Commit 12623e27acf6de0ab51fb3f3939f99d9babb84f2 was checked in Actions run https
 ## Container verification follow-up
 
 A real Docker build/runtime job was added after the native matrix passed. Its first run (39333031601) exposed an inherited `.dockerignore` allowlist that excluded the new service and root license from the build context. `Dockerfile.api.dockerignore` now supplies an API-specific allowlist while preserving the original converter image configuration. The CI runtime probe checks UID 10001, read-only /app, unauthenticated rejection, real synthetic TXT extraction and explicit partial batch status under `--network none`, dropped capabilities and no-new-privileges. The corrected container run is pending; an authored Dockerfile is not counted as an executed container.
+
+## Confirmed isolated Docker execution — 2026-10-20
+
+API build-context correction d816988c7b39fd2fe3cd032db8531c2a79d0904f passed Document API run https://github.com/hamed665/ai-document-intelligence/actions/runs/39346640822 . Both verify and container jobs succeeded. Container log: `PASS: non-root read-only container, auth, real TXT conversion and partial batch`. This supersedes the earlier unexecuted-Docker limitation and initial ignored-context failure.
+
+The CI container has no external network, runs UID 10001 with dropped capabilities and no-new-privileges, and rejects writes to /app. It uses temporary /tmp and tests HTTP against loopback from inside its own namespace. No public port, customer document or real token is used. This does not certify OS vulnerabilities, arbitrary-parser safety, production concurrency/load or the complete Compose deployment.
