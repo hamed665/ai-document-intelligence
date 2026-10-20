@@ -1,0 +1,14 @@
+# Separate allowlist for the API image; preserve the upstream image's context rules.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!LICENSE
+!service/
+!service/**
+!packages/
+!packages/markitdown/
+!packages/markitdown/**
+**/__pycache__/
+**/*.pyc
+**/.venv/

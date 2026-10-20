@@ -1,0 +1,41 @@
+name: Document API
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.12.23'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: uv sync --locked --group dev
+      - run: uv run ruff check service tests-service
+      - run: uvx black==23.7.0 --check service tests-service
+      - run: uv run pytest tests-service
+      - run: uv run pip-audit --path .venv/lib/python3.12/site-packages
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f Dockerfile.api -t document-api:ci .
+      - name: Exercise isolated container with synthetic documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name document-api-ci --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m \
+            -e DOCUMENT_API_TOKEN=synthetic-container-ci-token-only document-api:ci
+          trap 'docker logs document-api-ci; docker rm -f document-api-ci' EXIT
+          docker exec -i document-api-ci python - < scripts/container_smoke.py
