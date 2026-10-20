@@ -1,5 +1,11 @@
 # Document Intelligence API
 
+**[Hamed Minaei](https://github.com/hamed665) · Project maintainer & integration engineer**
+
+**My engineering scope:** Authenticated extraction API, conservative invoice fields, ordered partial-success batches and isolated Docker execution.
+
+[My contributions & implementation evidence](MY_CONTRIBUTIONS.md) · [Implementation PR](https://github.com/hamed665/ai-document-intelligence/pull/1) · [Architecture](#architecture) · [Testing](#testing)
+
 A bounded local document-processing service by Hamed Minaei, built on Microsoft's MarkItDown library. Converts uploaded files to Markdown, extracts conservative structured invoice fields, and supports ordered batch results.
 
 **Status: tested local API preview, not production-ready.** No external AI service, OCR provider, customer document or production environment is connected. “Structured extraction” here means deterministic rules, not an LLM.
